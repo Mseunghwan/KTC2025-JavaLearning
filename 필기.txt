@@ -330,3 +330,74 @@ extends 키워드로 상속 구현 가능
 
 인터페이스에 변수 선언하는 경우 형식에 관곙벗이 자동으로 상수로 선언
 --> public static final로 선언
+
+2-7 캡슐화(접근제어자)
+객체 정보를 외부에서 직접 접근하지 못하게 보호하는 개념,
+캡슐처럼 감싸 내부를 보호하고 외부로부터 내용을 숨기는 모습에서 유래
+클래스 혹은 객체의 캡슐화
+
+캡슐화를 구현하기 위해선 접근제어자를 이해해야
+접근제어자 --> 클래스, 변수, 메서드, 생성자의 접근 범위를 제한하는 키워드
+
+접근제어자 | 클래스 내부 패키지 내부 상속한 클래스 전체 공개
+public       ✅       ✅        ✅       ✅
+protected    ✅       ✅        ✅       ❌
+default      ✅       ✅        ❌       ❌
+private      ✅       ❌        ❌       ❌
+
+데이터 접근
+게터와 세터
+--> 캡슐화가 잘 적용된 클래스는 내부 데이터를 private
+--> 데이터 조회나 변경 필요하면 안전한 접근방법 필요
+--> 그 역할을 수행하는 메서드가 게터와 세터
+
+게터 )
+public class Person {
+    private String secret;
+
+    public String getSecret() {
+		    return this.secret; // ✅ 객체의 secret 속성 반환
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+		    Person p1 = new Person();
+		    p1.secret; // ❌ 직접 접근 불가능
+		    String newSecret = p1.getSecret(); // ✅ 게터를 활용해 접근가능
+    }
+}
+
+세터 )
+public class Person {
+    private String secret;
+
+    public void setSecret(String secret) {
+		    this.secret = secret; // ✅ secret 속성 설정 및 변경
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+		    Person p1 = new Person();
+		    p1.secret = "password"; // ❌ 직접접근, 변경 불가능
+		    p1.setSecret("newPassword"); // ✅ 세터를 활용해 접근, 변경가능
+    }
+}
+
+무분별한 세터?
+접근을 막아놓고 세터로 무분별하게 접근가능하게 할 경우, 혹은 불필요한 세터 활용
+
+// 무분별한 세터
+public void setRightArm(...
+public void setRightLeg(...
+public void setLeftArm(...
+public void setLeftLeg(...
+
+// 의미있는 세터
+public void walk(boolean power){
+    this.leftLeg = power;
+    this.leftArm = power;
+    this.rightLeg = power;
+    this.rightArm = power;
+}
