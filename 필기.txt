@@ -423,7 +423,83 @@ super() - 부모인스턴스의 생성자
 추상클래스와 인터페이스 차이
 --> 상속이 계층적 구조 선언하기에 적합
 --> 인터페이스는 표준 제공에 적합
--->인터페이스는 인스턴스 변수 선언 불가
+--> 인터페이스는 인스턴스 변수 선언 불가
 --> 계층적 구조 표현하며 공통 속성과 기능 재사용 시 추상클래스 사용 적합
 
+2-9 추상화
+특정 계층에서 필요한 본질적 특성만 유지, 불필요한 사항을 숨기는 객체지향의 특징
+
+ex. 고양이 -> 동물 -> 생명체
+객체지향 프로그래밍에서는 추상화의 계층적 특징을 통해 유지보수성 좋은 프로그램 만들 수 있음
+이런 추상화 특징 활용할 수 있다는 것이 객체지향의 3번째 특징
+--> 계층구조 구현? 자바의 특징(인터페이스 상속, 클래스 상속)으로 구현
+추상화 특징은 다형성에서 활용됨
+그러니, 계층마다 존재하는 특성만 유지한다는 거는
+생명체(존재하는가? 메서드) -> 동물(울음소리 메서드) -> 고양이(스크래치 메서드)
+각 고유 계층에 맞는 특성을 구현해서 추상화를 구현
+
+2-10 다형성
+하나의 타입으로 여러 객체를 다룰 수 있는 기술
+업 캐스팅? 자식 -> 부모
+다운 캐스팅? 부모 -> 자식
+
+형변환을 통해 타입 다른 것 끼리 다룰 수 있음(부모타입으로 자식타입 다룰 수 있는 이유)
+
+LiftForm -> Animal -> Dog, Cat 일 때
+
+package chapter2.polymorphism;
+
+public class Main {
+    public static void main(String[] args) {
+        // 다형성 활용
+        // 한 가지 데이터 타입으로 두 가지 객체를 담는다
+
+        Animal animal1 = new Cat();
+        Animal animal2 = new Dog();
+
+        animal1.exist();
+        animal1.maksSound();
+
+        animal2.exist();
+        animal2.maksSound();
+
+        // 업캐스팅 주의사항?
+        // cat, dog의 고유기능 사용 X - scratch, wag 사용 불가
+        // 다운캐스팅 해줘야
+        Cat cat = (Cat) animal1;
+        Dog dog = (Dog) animal2;
+
+        cat.scratch();
+        dog.wag();
+
+
+
+        // 잘못된 다운캐스팅?
+        //   Cat cat2 = (Cat) animal2; // animal2 = Dog; 이기에 X!!
+
+        // 다운 캐스팅 시 instanceof 활용 방법
+        if (animal2 instanceof Cat) {
+            Cat cat2 = (Cat) animal2;
+            cat2.scratch();
+        } else {
+            System.out.println("객체가 고양이가 아닙니다");
+        }
+
+        // 다형성의 장점 --> Animal 데이터 타입 하나로도 가능하게
+        Animal[] animals = {new Cat(), new Dog(), new Cat()};
+        System.out.println("::::");
+        for (Animal animal : animals) {
+            animal.maksSound();
+        }
+
+
+    }
+}
+
+
+자식타입 고유 기능을 사용할 수 없기에, 다운캐스팅이 필요
+다만 위와같은 잘못된 다운캐스팅은 컴파일 단계에서 감지불가하기에 instanceOf 처리해야
+
+다형성의 장점??
+한 타입으로 유연한 프로그래밍 가능하다
 
