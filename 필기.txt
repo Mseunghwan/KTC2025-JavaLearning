@@ -504,3 +504,62 @@ public class Main {
 한 타입으로 유연한 프로그래밍 가능하다
 
 3-1 예외와 예외처리
+예외(Exception)
+프로그램 실행 중 예상하지 못한 상황이 발생하는 것을 의미
+의도적으로 예외 발생 시킬땐 throw 키워드를 통해 발생
+예외 처리 하지 않으면 프로그램 중단될 수
+그래서 예외처리(try-catch)를 통해 프로그램이 안정적으로 실행되게 할 수 있음
+
+10/0 과 같은 연산?
+ArithmeticException(산술예외) 발생함
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("프로그램 시작");
+        int result = 10 / 0; // ❌ 예외 발생 (ArithmeticException)
+        System.out.println("이 문장은 실행되지 않음");
+    }
+}
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+	at chapter3.exception.Main.main(Main.java:8)
+
+Process finished with exit code 1
+
+의도적인 예외 - throw
+특정 조건에서 의도적으로 예외 발생 가능
+thorw 활용하면 예외 명확히 정의, 제어 가능!
+public class Main {
+    public static void main(String[] args) {
+        int age = 10;
+        if (age < 18) {
+		        // ✅ 의도적으로 예외를 발생시키는 부분
+            throw new IllegalArgumentException("미성년자는 접근할 수 없습니다!");
+        }
+        System.out.println("....");
+    }
+}
+
+예외구조와 종류
+--> RuntimeException? UncheckedException
+RuntimeException 을 상속받는 모든 예외를 UncheckedException 이라고 합니다.
+예외처리를 컴파일러가 확인하지 않음
+
+--> Exception? CheckedException
+Exception 클래스를 직접 상속받는 모든 예외를 CheckedException 이라고합니다. RuntimeException과 RuntimeException 을 상속받은 예외는 제외합니다.
+예외처리를 컴파일러가 확인함
+
+예외전파
+--> 메서드에서 발생한 예외가 해당 메서드 내에서 처리 X 일 때
+메서드 호출한 상위 메서드로 전달되는 과정
+--> 예외가 프로그램 시작지점까지 전파되고 끝내 처리되지 않으면 프로그램 비정상 종료
+
+checkedexception - Exception 클래스를 직접 상속받는 모든 예외
+컴파일러가 예외처리를 강제함, 안하면 빨간줄. 그래서 try-catch로 예외 처리하거나
+throws 키워드 써야
+
+
+3-2 Optional - null을 다루는 법
+Optional 객체는 null을 안전하게 다루게 해주는 객체
+null을 직접다루는 대신 optional 을 사용하면
+nullPointerException 방지 가능
+
+
