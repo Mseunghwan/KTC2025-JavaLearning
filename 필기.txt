@@ -569,7 +569,7 @@ Optional 객체는 값이 있을수도, 없을수도 있는 컨테이너라고 �
 배열의 한계
 선언과 동시 길이 설정 필요
 컬렉션?
-ArrayList<Integer> arrayList = new ArrayList<Integer>(); - 요 뒤에 <Integer>은 생략 O
+ArrayList<Integer> arrayList = new ArrayList<Integer>(); - 요 뒤에 Integer은 생략 O
 arrayList.add(10);
 arrayList.add(20);
 arrayList.add(30);
@@ -581,5 +581,82 @@ List      순서 유지, 중복 허용        ArrayList
 Set       순서 없음, 중복 불가        HashSet
 Map      키-값 구조, 키 중복 불가      HashMap
 
+// List 를 구현한 ArrayList
+ArrayList<String> names = new ArrayList<>();
+names.add("Spartan");      // 1 번째 요소 추가
+names.add("Steve");        // 2 번째 요소 추가
+names.add("Isac");         // 3 번째 요소 추가
+names.add("1");
+names.add("2");
+
+ // ✅ 순서 보장
+System.out.println("names = " + names);
+
+// ✅ 중복 데이터 허용
+names.add("Spartan");
+System.out.println("names = " + names);
+
+// ✅ 단건 조회
+System.out.println("1 번째 요소 조회: " + names.get(0)); // 조회 Spartan
+
+// ✅ 데이터 삭제
+names.remove("Steve");
+System.out.println("names = " + names);
 
 
+// Set 을 구현한 HashSet
+HashSet<String> uniqueNames = new HashSet<>();
+
+// ✅ 추가
+uniqueNames.add("Spartan");
+uniqueNames.add("Steve");
+uniqueNames.add("Isac");
+uniqueNames.add("1");
+uniqueNames.add("2");
+
+// ⚠️ 순서를 보장 안함
+System.out.println("uniqueNames = " + uniqueNames);
+uniqueNames.get(0); // ❌ get 사용 불가
+
+// ⚠️ 중복 불가
+uniqueNames.add("Spartan");
+System.out.println("uniqueNames = " + uniqueNames);
+
+// ✅ 제거
+uniqueNames.remove("Spartan");
+System.out.println("uniqueNames = " + uniqueNames);
+
+
+// Map 을 구현한 HashMap
+HashMap<String, Integer> memberMap = new HashMap<>();
+
+// ✅ 추가
+memberMap.put("Spartan", 15);
+memberMap.put("Steve", 15); // ✅ 값은 중복 가능
+memberMap.put("Isac", 1);
+memberMap.put("John", 2);
+memberMap.put("Alice", 3);
+
+// ⚠️ 순서 보장 안함
+System.out.println("memberMap = " + memberMap);
+
+// ⚠️ 키 중복 불가: 값 덮어쓰기 발생
+memberMap.put("Alice", 5);
+System.out.println("memberMap = " + memberMap);
+
+// ✅ 조회: 15
+System.out.println(memberMap.get("Steve"));
+
+// ✅ 삭제 가능
+memberMap.remove("Spartan");
+System.out.println("memberMap = " + memberMap);
+
+// ✅ 키 확인
+Set<String> keys = memberMap.keySet();
+System.out.println("keys = " + keys);
+
+// ✅ 값 확인
+Collection<Integer> values = memberMap.values();
+System.out.println("values = " + values);
+
+3-4 제네릭
