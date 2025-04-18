@@ -660,3 +660,99 @@ Collection<Integer> values = memberMap.values();
 System.out.println("values = " + values);
 
 3-4 제네릭
+제네릭 ? 클래스, 메서드 등에 사용되는 <T>타입 매개변수를 의미
+타입 미리 정의하지 않고 사용시점에 유연하게 결정 가능한 문법
+제네릭 활용하면 코드 재사용성과 타입 안정성 보장
+하지만 과도하면 오히려 복잡하므로 유의
+1. 코드 재사용성
+2. 타입 안정성
+
+클래스에 제네릭 써서 재사용성, 타입안정성 보장
+제네릭 클래스는 클래스 선언부에 <T>가 선언된 클래스
+public class GenericBox<T> { // ✅ 제네릭 클래스
+    private T item;
+
+    public GenericBox(T item) {
+        this.item = item;
+    }
+
+    public T getItem() {
+        return this.item;
+    }
+}
+
+타입소거(Erasure)?
+컴파일 시점에 제네릭 타입 정보 제거하는 과정
+<T> 타입 매개변수 부분은 Object로 대체
+필요 경우 컴파일러가 자동 강제 다운캐스팅 코드 삽입해 타입 안정성 보장
+public class Main {
+    public static void main(String[] args) {
+
+        // 1. ✅ 재사용 가능(컴파일시 타입소거: T -> Object)
+        GenericBox<String> strGBox = new GenericBox<>("ABC");
+        GenericBox<Integer> intGBox = new GenericBox<>(100);
+        GenericBox<Double> doubleGBox = new GenericBox<>(0.1);
+
+        // 2. ✅ 타입 안정성 보장(컴파일시 타입소거: 자동으로 다운캐스팅)
+        String strGBoxItem = strGBox.getItem();
+        Integer intGBoxItem = intGBox.getItem();
+        Double doubleGBoxItem = doubleGBox.getItem();
+        System.out.println("strGBoxItem = " + strGBoxItem);
+        System.out.println("intGBoxItem = " + intGBoxItem);
+        System.out.println("doubleGBoxItem = " + doubleGBoxItem);
+    }
+}
+
+제네릭 메서드 --> 메서드 내부서 사용할 타입을 유연히 지정하는 기능
+제네릭 메서드? 메서드 선언부에 <T> 선언된 메서드
+--> 클래스 제네릭 타입과 별개, 독립적인 타입 매개변수 가짐
+
+public class GenericBox<T> {
+
+    // 속성
+    private T item;
+
+    // 생성자
+    public GenericBox(T item) {
+        this.item = item;
+    }
+
+    // 기능
+    public T getItem() {
+        return this.item;
+    }
+
+		// ⚠️ 일반 메서드 T item 는 클래스의 <T> 를 따라갑니다.
+    public void printItem(T item) {
+        System.out.println(item);
+    }
+
+    // ✅ 제네릭 메서드 <S> 는 <T> 와 별개로 독립적이다.
+    public <S> void printBoxItem(S item) {
+        System.out.println(item);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        GenericBox<String> strGBox = new GenericBox<>("ABC");
+        GenericBox<Integer> intGBox = new GenericBox<>(100);
+
+        // ⚠️ 일반메서드: 클래스 타입 매개변수를 따라갑니다.
+        // String 데이터 타입 기반으로 타입소거가 발생.
+        // String 타입의 다운캐스팅 코드 삽입!
+        strGBox.printItem("ABC"); // ✅ String 만 사용가능
+        strGBox.printItem(100);   // ❌ 에러 발생
+
+        // ✅ 제네릭 메서드: 독립적인 타입 매개변수를 가집니다.
+        // String 타입 정보가 제네릭 메서드에 아무런 영향을 주지 못함.
+        // 다운캐스팅 코드 삽입되지 않음.
+        strGBox.printBoxItem("ABC"); //✅ 모든 데이터 타입 활용 가능
+        strGBox.printBoxItem(100);   //✅ 모든 데이터 타입 활용 가능
+        strGBox.printBoxItem(0.1);   //✅ 모든 데이터 타입 활용 가능
+    }
+}
+
+
+3-5 람다
