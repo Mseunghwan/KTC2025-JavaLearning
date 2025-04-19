@@ -756,3 +756,140 @@ public class Main {
 
 
 3-5 람다
+익명클래스?
+이름이 없는 클래스
+--> 별도 클래스 파일 만들지 않고 코드 내에서 일회성으로 정의, 사용
+인터페이스, 클래스의 구현과 상속으로 익명클래스 구현 가능
+--> 람다에선 인터페이스 사용된 익명클래스 활용
+
+인터페이스를 활용한 익명클래스 예시
+public interface Calculator {
+
+    int sum(int a, int b);
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+		    // ✅ 익명 클래스 활용
+        Calculator calculator1 = new Calculator() {
+            @Override
+            public int sum(int a, int b) {
+                return a + b;
+            }
+        };
+
+        int ret1 = calculator1.sum(1, 1);
+        System.out.println("ret1 = " + ret1);
+    }
+}
+람다
+--> 익명 클래스 간결 표현
+--> 함수형 인터페이스 통해 구현 권장
+--> 하나의 추상 메서드만 가져야하기에, 하지만 하나의 추상메서드를 가진 일반 인터페이스 통해서도 가능
+
+람다식을 활용한 익명클래스 변환방법?
+컴파일 시점 컴파일러가 (a, b) -> a+b 람다 표현식을 보고
+sum() 메서드를 가진 익명클래스를 구현한다
+Calculator 인터페이스에 추상메서드가 하나기에 sum()이라고 추론가능하기에
+
+// 람다 표현식
+Calculator calculator1 = (a, b) -> a + b;
+
+// 익명클래스
+Calculator calculator1 = new Calculator() {
+		@Override
+		public int sum(int a, int b) {
+				return a + b;
+		}
+};
+
+@FunctionalInterface // ✅ 함수형 인터페이스 선언
+public interface Calculator {
+
+    int sum(int a, int b); // ✅ 오직 하나의 추상 메서드만 선언해야합니다.
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+		    ...
+
+        // ✅ 람다식 활용
+        Calculator calculator2 = (a, b) -> a + b;
+        int ret2 = calculator2.sum(2, 2);
+        System.out.println("ret2 = " + ret2);
+    }
+}
+
+람다 주의사항?
+함수형 인터페이스를 써야한다!!
+함수형 인터페이스 - 단 하나의 추상 메서드만 가지도록 강제하는 어노테이션
+예를 들어 오버로딩 기능으로 같은 이름의 sum() 메서드 여러 형태로 정의하면
+람다 표현식이 어느 메서드 구현인지 명확하지 않아 모호성
+
+public interface Calculator {
+    int sum(int a, int b);        // ✅ 선언 가능
+    int sum(int a, int b, int c); // ⚠️ 오버로딩으로 선언 가능 모호성 발생!
+}
+
+@FunctionalInterface // ✅ 함수형 인터페이스 선언
+public interface Calculator {
+    int sum(int a, int b); // ✅ 오직 하나의 추상 메서드만 선언해야합니다.
+    int sum(int a, int b, int c); // ❌ 선언 불가 에러발생!
+}
+
+람다식을 매개변수로 전달하는 방법
+
+public class Main {
+    public static int calculate(int a, int b, Calculator calculator) {
+        return calculator.sum(a, b);
+    }
+
+    public static void main(String[] args) {
+
+        Calculator cal1 = new Calculator() {
+            @Override
+            public int sum(int a, int b) {
+                return a + b;
+            }
+        };
+
+        // ✅ 익명 클래스를 변수에 담아 전달
+        int ret3 = calculate(3, 3, cal1);
+        System.out.println("ret3 = " + ret3); // 출력: ret3 = 6
+    }
+}
+
+public class Main {
+
+    public static int calculate(int a, int b, Calculator calculator) {
+        return calculator.sum(a, b);
+    }
+
+    public static void main(String[] args) {
+        Calculator cal2 = (a, b) -> a + b;
+
+        // ✅ 람다식을 변수에 담아 전달
+        int ret4 = calculate(4, 4, cal2);
+        System.out.println("ret4 = " + ret4); // 출력: ret4 = 8
+    }
+}
+
+
+public class Main {
+
+    public static int calculate(int a, int b, Calculator calculator) {
+        return calculator.sum(a, b);
+    }
+
+    public static void main(String[] args) {
+        // ✅ 람다식을 직접 매개변수로 전달
+        int ret5 = calculate(5, 5, (a, b) -> a + b);
+        System.out.println("ret5 = " + ret5); // 출력: ret5 = 10
+    }
+}
+
+3-6 스트림
