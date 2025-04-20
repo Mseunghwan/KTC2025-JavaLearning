@@ -893,3 +893,58 @@ public class Main {
 }
 
 3-6 스트림
+스트림 --> 데이터 효율적으로 처리하는 흐름
+--> 선언형 스타일로 가독성 뛰어남
+--> 데이터 준비 - 중간연산 - 최종연산 순
+
+스트림은 컬렉션(List, Set)과 함께 자주 활용
+자주 활용되는 map(), filter() 예시
+
+for과 스트림 비교>> !
+
+List<Integer> arrayList = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+public class Main {
+
+    public static void main(String[] args) {
+
+        // ArrayList 선언
+        List<Integer> arrayList = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+
+        // ✅ for 명령형 스타일: 각 요소 * 10 처리
+        List<Integer> ret1 = new ArrayList<>();
+        for (Integer num : arrayList) {
+            int multipliedNum = num * 10; // 각 요소 * 10
+            ret1.add(multipliedNum);
+        }
+        System.out.println("ret1 = " + ret1);
+    }
+}
+
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        // ArrayList 선언
+        List<Integer> arrayList = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+
+        // ✅ 스트림 선언적 스타일: 각 요소 * 10 처리
+        List<Integer> ret2 = arrayList.stream().map(num -> num * 10).collect(Collectors.toList());
+        System.out.println("ret2 = " + ret2);
+    }
+}
+
+단계
+설명
+주요 API 순
+1. 데이터 준비
+컬렉션을 스트림으로 변환
+stream(), parallelStream()
+2. 중간 연산 등록
+(즉시 실행되지 않음)
+데이터 변환 및 필터링
+map(), filter(), sorted()
+3. 최종 연산
+최종 처리 및 데이터 변환
+collect(), forEach(), count()
+
