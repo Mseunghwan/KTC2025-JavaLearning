@@ -948,3 +948,128 @@ map(), filter(), sorted()
 최종 처리 및 데이터 변환
 collect(), forEach(), count()
 
+3-7 쓰레드
+쓰레드 - 프로그램 내에서 독립적으로 실행되는 하나의 작업단위
+--> 싱글 쓰레드는 한 번에 하나의 작업, 멀티 쓰레드는 여러 작업 동시 처리
+멀티쓰레드 쓰면 여러 작업 병렬 수행해 처리성능 향상 가능
+
+싱글쓰레드 예시
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("::: main 쓰레드 시작 :::");
+        String threadName = Thread.currentThread().getName();
+
+        // ✅ 하나의 작업 단위: 숫자를 0 부터 9 까지 출력
+        for (int i = 0; i < 10; i++) {
+            System.out.println("현재 쓰레드: " + threadName + " - " + i);
+            try {
+                Thread.sleep(500); // 0.5 초 대기
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // ✅ 추가작업
+        for (int i = 0; i < 10; i++) {
+            System.out.println("현재 쓰레드: " + threadName + " - " + i);
+            try {
+                Thread.sleep(500); // 0.5 초 대기
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("::: 작업 끝 :::");
+    }
+}
+
+멀티쓰레드 예시
+Thread 클래스 상속받아 구현,
+Thread.run() 메서드 오버라이드 해 쓰레드 수행할 작업 정의 가능
+start() 호출하면 새로운 쓰레드 생성, run()의 작업내용 실행
+
+총 세개의 쓰레드 main, thread0, thread1 병렬로 실행
+main 쓰레드 thread0, thread1을 생성, 실행
+생성된 thread0, thread1은 0.5초마다 0 ~ 9까지 숫자 출력
+
+주의
+쓰레드를 실행시킬 때 꼭 start() 를 사용하세요!
+start()는 새로운 쓰레드에서 run()을 실행하지만 run()을 직접 호출하면 현재 쓰레드에서 실행됩니다.
+
+// ✅ Thread 클래스 상속으로 쓰레드 구현
+public class MyThread extends Thread {
+
+    @Override
+    public void run() {
+        String threadName = Thread.currentThread().getName();
+        System.out.println("::: " + threadName + "쓰레드 시작 :::");
+        for (int i = 0; i < 10; i++) {
+            System.out.println("현재 쓰레드: " + threadName + " - " + i);
+            try {
+                Thread.sleep(500); // 딜레이 0.5 초
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("::: " + threadName + "쓰레드 종료 :::");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("::: main 쓰레드 시작");
+
+        MyThread thread0 = new MyThread();
+        MyThread thread1 = new MyThread();
+
+        // 1. thread0 실행
+        System.out.println("::: main 이 thread0 을 실행");
+        thread0.start();
+
+        // 2. thread1 실행
+        System.out.println("::: main 이 thread1 을 실행");
+        thread1.start();
+
+        System.out.println("::: main 쓰레드 종료");
+    }
+}
+
+join()?
+특정 쓰레드 끝날 때 까지 기다리기
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("::: main 쓰레드 시작");
+        MyThread thread0 = new MyThread();
+        MyThread thread1 = new MyThread();
+
+        // 시작시간 기록
+        long startTime = System.currentTimeMillis();
+
+        // 1. thread0 시작
+        System.out.println("thread0 시작");
+        thread0.start();
+
+        // 2. thread1 시작
+        System.out.println("thread1 시작");
+        thread1.start();
+
+        // ⌛️ main 쓰레드 대기 시키기
+        try {
+            thread0.join();
+            thread1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        long endTime = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("총 작업 시간: " + totalTime + "ms");
+        System.out.println("::: main 쓰레드 종료");
+    }
+}
+
+Runnable 인터페이스 활용해 쓰레드 구현을 권장함
+1. 유지보수성과 재사용성
+2. 기존 클래스 유지하며 확장 가능
+
